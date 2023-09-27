@@ -46,7 +46,7 @@ class TwilioConversationsPlugin : FlutterPlugin {
             instance.onAttachedToEngine(registrar.context(), registrar.messenger())
         }
 
-        lateinit var messenger: BinaryMessenger
+        var messengers: MutableSet<BinaryMessenger> = mutableSetOf()
 
         @JvmStatic
         lateinit var instance: TwilioConversationsPlugin
@@ -84,20 +84,16 @@ class TwilioConversationsPlugin : FlutterPlugin {
     }
 
     override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
-        if (initialized) {
-            debug("TwilioConversationsPlugin.onAttachedToEngine => return")
-            return
-        } else {
-            debug("TwilioConversationsPlugin.onAttachedToEngine => initializing")
-        }
-
-        initialized = true
         instance = this
         onAttachedToEngine(binding.applicationContext, binding.binaryMessenger)
     }
 
     private fun onAttachedToEngine(applicationContext: Context, messenger: BinaryMessenger) {
-        TwilioConversationsPlugin.messenger = messenger
+        Log.d("TwilioInfo", "Martin! setting messanger ${messenger}")
+        if (!TwilioConversationsPlugin.messengers.contains(messenger)) {
+            TwilioConversationsPlugin.messengers.add(messenger);
+        }
+
         val pluginHandler = PluginHandler(applicationContext)
         methodChannel = MethodChannel(messenger, "flutter_twilio_conversations")
         methodChannel.setMethodCallHandler(pluginHandler)
@@ -154,6 +150,10 @@ class TwilioConversationsPlugin : FlutterPlugin {
                 notificationSink = null
             }
         })
+        //Looks like it is regestering with the last attache, but we need it on the 1st? 
+        //TODO Martin maybe keep list of all of the messangers and listen separately, or see if it is possible to not keep a list 
+        //at all? 
+        Log.d("TwilioInfo", "Martin! on new the channelChannels ${TwilioConversationsPlugin.channelChannels}")
     }
 
     override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
@@ -163,7 +163,6 @@ class TwilioConversationsPlugin : FlutterPlugin {
         loggingChannel.setStreamHandler(null)
         notificationChannel.setStreamHandler(null)
         mediaProgressChannel.setStreamHandler(null)
-        initialized = false
     }
 
     fun registerForNotification(call: MethodCall, result: MethodChannel.Result) {
