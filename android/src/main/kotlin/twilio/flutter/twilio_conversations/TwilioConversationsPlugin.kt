@@ -46,7 +46,7 @@ class TwilioConversationsPlugin : FlutterPlugin {
             instance.onAttachedToEngine(registrar.context(), registrar.messenger())
         }
 
-        lateinit var messenger: BinaryMessenger
+        var messengers: MutableSet<BinaryMessenger> = mutableSetOf()
 
         @JvmStatic
         lateinit var instance: TwilioConversationsPlugin
@@ -84,20 +84,15 @@ class TwilioConversationsPlugin : FlutterPlugin {
     }
 
     override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
-        if (initialized) {
-            debug("TwilioConversationsPlugin.onAttachedToEngine => return")
-            return
-        } else {
-            debug("TwilioConversationsPlugin.onAttachedToEngine => initializing")
-        }
-
-        initialized = true
         instance = this
         onAttachedToEngine(binding.applicationContext, binding.binaryMessenger)
     }
 
     private fun onAttachedToEngine(applicationContext: Context, messenger: BinaryMessenger) {
-        TwilioConversationsPlugin.messenger = messenger
+        if (!TwilioConversationsPlugin.messengers.contains(messenger)) {
+            TwilioConversationsPlugin.messengers.add(messenger);
+        }
+
         val pluginHandler = PluginHandler(applicationContext)
         methodChannel = MethodChannel(messenger, "flutter_twilio_conversations")
         methodChannel.setMethodCallHandler(pluginHandler)
