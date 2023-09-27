@@ -156,7 +156,6 @@ object Mapper {
         if (!TwilioConversationsPlugin.channelChannels.containsKey(channel.sid)) {
             for (messenger in TwilioConversationsPlugin.messengers) {
                 TwilioConversationsPlugin.channelChannels[channel.sid] = EventChannel(messenger, "flutter_twilio_conversations/${channel.sid}")
-                Log.d("TwilioInfo", "Martin! setting stream handler on messanger ${messenger}")//TODO remove
                 TwilioConversationsPlugin.channelChannels[channel.sid]?.setStreamHandler(object : EventChannel.StreamHandler {
                     override fun onListen(arguments: Any?, events: EventChannel.EventSink) {
                         Log.d("TwilioInfo", "Mapper.channelToMap => EventChannel for Channel(${channel.sid}) attached")

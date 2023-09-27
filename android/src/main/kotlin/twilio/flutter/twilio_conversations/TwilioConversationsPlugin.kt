@@ -89,7 +89,6 @@ class TwilioConversationsPlugin : FlutterPlugin {
     }
 
     private fun onAttachedToEngine(applicationContext: Context, messenger: BinaryMessenger) {
-        Log.d("TwilioInfo", "Martin! setting messanger ${messenger}")
         if (!TwilioConversationsPlugin.messengers.contains(messenger)) {
             TwilioConversationsPlugin.messengers.add(messenger);
         }
@@ -150,10 +149,6 @@ class TwilioConversationsPlugin : FlutterPlugin {
                 notificationSink = null
             }
         })
-        //Looks like it is regestering with the last attache, but we need it on the 1st? 
-        //TODO Martin maybe keep list of all of the messangers and listen separately, or see if it is possible to not keep a list 
-        //at all? 
-        Log.d("TwilioInfo", "Martin! on new the channelChannels ${TwilioConversationsPlugin.channelChannels}")
     }
 
     override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
