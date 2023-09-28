@@ -51,8 +51,6 @@ class TwilioConversationsPlugin : FlutterPlugin {
         @JvmStatic
         lateinit var instance: TwilioConversationsPlugin
 
-        private var initialized = false
-
         var chatClient: ConversationsClient? = null
 
         val LOG_TAG = "Twilio_PChat"
@@ -160,7 +158,7 @@ class TwilioConversationsPlugin : FlutterPlugin {
         mediaProgressChannel.setStreamHandler(null)
         channelChannels.clear()
         channelListeners.clear()
-        initialized = false
+        TwilioConversationsPlugin.messengers.clear()
     }
 
     fun registerForNotification(call: MethodCall, result: MethodChannel.Result) {
