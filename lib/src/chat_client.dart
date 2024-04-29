@@ -337,6 +337,16 @@ class ChatClient {
       throw TwilioConversationsClient._convertException(err);
     }
   }
+
+  /// Returns the notification used to launch the app (iOS Only)
+  Future<void> handleReceivedNotification() async {
+    try {
+      return await TwilioConversationsClient._methodChannel
+          .invokeMethod('handleReceivedNotification');
+    } on PlatformException catch (err) {
+      throw TwilioConversationsClient._convertException(err);
+    }
+  }
   //#endregion
 
   /// Update properties from a map.
